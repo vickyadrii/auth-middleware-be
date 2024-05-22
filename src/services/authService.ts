@@ -3,10 +3,15 @@ import { ResponseJSON } from "@/types/response";
 import { PrismaClient, Prisma } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
+import CryptoJS from "crypto-js";
+import { sendConfirmationEmail } from "../lib/node-mailer/nodeMailer";
+
 const prisma = new PrismaClient();
 
 export const createUserService = async (payload: User, response: ResponseJSON) => {
   const { name, email, password } = payload;
+
+  const token = CryptoJS.AES.encrypt(name || "", "HERE IS A SECRET KEY").toString();
 
   if (!name || !email || !password) {
     response({
@@ -25,15 +30,18 @@ export const createUserService = async (payload: User, response: ResponseJSON) =
         name,
         email,
         password: hashPassword,
+        email_token: token
       },
     });
 
     const { password, ...userData } = user;
 
+    await sendConfirmationEmail({...user, emailToken: token});
+
     response({
       code: 201,
       data: userData,
-      message: "Register successful!",
+      message: "Register successful! Confirmation email has been sent.",
     });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -54,6 +62,7 @@ export const createUserService = async (payload: User, response: ResponseJSON) =
   }
 };
 
+// Login User
 export const loginService = async (payload: User, response: ResponseJSON) => {
   const { email, password } = payload;
 
@@ -73,7 +82,7 @@ export const loginService = async (payload: User, response: ResponseJSON) => {
     });
 
     if (!user) {
-      console.log({user});
+      console.log({ user });
       response({
         code: 400,
         data: null,
@@ -86,7 +95,7 @@ export const loginService = async (payload: User, response: ResponseJSON) => {
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-        console.log({passwordMatch});
+      console.log({ passwordMatch });
       response({
         code: 400,
         data: null,
