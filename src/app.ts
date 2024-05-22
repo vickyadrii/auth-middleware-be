@@ -1,17 +1,16 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
+import router from "./routes/homeRoute";
+
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
 
-app.get("/", (req: Request, res: Response) => {
-  res.status(200).json({
-    message: "Hello World",
-    data: [],
-  });
-});
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(router)
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
