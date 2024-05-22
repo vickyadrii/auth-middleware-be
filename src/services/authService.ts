@@ -1,9 +1,11 @@
+import bcrypt from "bcryptjs";
+import CryptoJS from "crypto-js";
+
 import { User } from "@/types/auth";
 import { ResponseJSON } from "@/types/response";
 import { PrismaClient, Prisma } from "@prisma/client";
-import bcrypt from "bcryptjs";
 
-import CryptoJS from "crypto-js";
+import { generateToken } from "../lib/authentication/jwt";
 import { sendConfirmationEmail } from "../lib/node-mailer/nodeMailer";
 
 const prisma = new PrismaClient();
@@ -72,6 +74,7 @@ export const loginService = async (payload: User, response: ResponseJSON) => {
       data: null,
       message: "Email and Password are required!",
     });
+    return; 
   }
 
   try {
@@ -82,36 +85,44 @@ export const loginService = async (payload: User, response: ResponseJSON) => {
     });
 
     if (!user) {
-      console.log({ user });
       response({
-        code: 400,
+        code: 404,
         data: null,
         message: "User not found!",
       });
+      return;
+    }
 
+    if (!user.is_verified) {
+      response({
+        code: 403,
+        data: null,
+        message: "Your account is not yet verified!",
+      });
       return;
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      console.log({ passwordMatch });
       response({
-        code: 400,
+        code: 401,
         data: null,
         message: "Invalid password!",
       });
-
       return;
     }
 
+    const token = generateToken(user.id);
+    const { password: _, email_token, ...userData } = user;
+
     response({
       code: 200,
-      data: user?.email,
+      data: {...userData, token},
       message: "Login successful!",
     });
   } catch (error) {
-    console.log("err", error);
+    console.error(error);
     response({
       code: 500,
       data: null,
@@ -120,6 +131,7 @@ export const loginService = async (payload: User, response: ResponseJSON) => {
   }
 };
 
+// Verify Email Token
 export const verifyEmailTokenService = async (payload: User, response: ResponseJSON) => {
   const { email_token } = payload;
   try {
@@ -129,6 +141,8 @@ export const verifyEmailTokenService = async (payload: User, response: ResponseJ
       },
     });
 
+    const token = generateToken(user?.id);
+
     if (user) {
       await prisma.user.update({
         where: { id: user.id },
@@ -137,22 +151,40 @@ export const verifyEmailTokenService = async (payload: User, response: ResponseJ
           is_verified: true,
         },
       });
-  
+
+      await prisma.userProfile.create({
+        data: {
+          userId: user.id,
+        },
+      });
 
       response({
         code: 200,
-        data: user.email,
+        data: { ...user, token },
         message: "Login successful!",
       });
       return;
     } else {
-      console.log({ user });
       response({
         code: 400,
         data: null,
         message: "Invalid Token!",
       });
     }
+  } catch (error) {
+    console.log({ error });
+  }
+};
+
+export const getUsersService = async (response: ResponseJSON) => {
+  try {
+    const users = await prisma.user.findMany();
+    response({
+      code: 200,
+      data: users,
+      message: "Get data users successful!",
+    });
+    return;
   } catch (error) {
     console.log({ error });
   }
