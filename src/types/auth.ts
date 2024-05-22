@@ -2,5 +2,5 @@ export type User = {
   name?: string;
   email: string;
   password: string;
-  emailToken?: string
+  email_token?: string
 };

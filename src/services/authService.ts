@@ -11,7 +11,7 @@ const prisma = new PrismaClient();
 export const createUserService = async (payload: User, response: ResponseJSON) => {
   const { name, email, password } = payload;
 
-  const token = CryptoJS.AES.encrypt(name || "", "HERE IS A SECRET KEY").toString();
+  const emailToken = CryptoJS.AES.encrypt(name || "", "HERE IS A SECRET KEY").toString();
 
   if (!name || !email || !password) {
     response({
@@ -30,13 +30,13 @@ export const createUserService = async (payload: User, response: ResponseJSON) =
         name,
         email,
         password: hashPassword,
-        email_token: token
+        email_token: emailToken,
       },
     });
 
     const { password, ...userData } = user;
 
-    await sendConfirmationEmail({...user, emailToken: token});
+    await sendConfirmationEmail({ ...user, email_token: emailToken });
 
     response({
       code: 201,
@@ -117,5 +117,43 @@ export const loginService = async (payload: User, response: ResponseJSON) => {
       data: null,
       message: "Oops! Something went wrong!",
     });
+  }
+};
+
+export const verifyEmailTokenService = async (payload: User, response: ResponseJSON) => {
+  const { email_token } = payload;
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        email_token: email_token,
+      },
+    });
+
+    if (user) {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          email_token: null,
+          is_verified: true,
+        },
+      });
+  
+
+      response({
+        code: 200,
+        data: user.email,
+        message: "Login successful!",
+      });
+      return;
+    } else {
+      console.log({ user });
+      response({
+        code: 400,
+        data: null,
+        message: "Invalid Token!",
+      });
+    }
+  } catch (error) {
+    console.log({ error });
   }
 };

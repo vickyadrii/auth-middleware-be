@@ -8,7 +8,7 @@ const SMPT_HOST = process.env.SMTP_HOST;
 const SMPT_PORT = process.env.SMTP_PORT || "";
 
 export const sendConfirmationEmail = async (user: User) => {
-  const { name, email, emailToken } = user;
+  const { name, email, email_token } = user;
 
   const transporter = nodemailer.createTransport({
     service: SMPT_SERVICE,
@@ -101,7 +101,7 @@ export const sendConfirmationEmail = async (user: User) => {
               <h3>Please verify your email</h3>
               <div class="email-total">
                   <p><b>Token : Rp.` +
-      emailToken +
+      email_token +
       `</b></p>
               </div>
               <div class="email-thanks">
