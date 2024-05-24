@@ -122,7 +122,6 @@ export const loginService = async (payload: User, response: ResponseJSON) => {
       message: "Login successful!",
     });
   } catch (error) {
-    console.error(error);
     response({
       code: 500,
       data: null,
@@ -154,7 +153,7 @@ export const verifyEmailTokenService = async (payload: User, response: ResponseJ
 
       await prisma.userProfile.create({
         data: {
-          userId: user.id,
+          user_id: user.id,
         },
       });
 
@@ -172,7 +171,11 @@ export const verifyEmailTokenService = async (payload: User, response: ResponseJ
       });
     }
   } catch (error) {
-    console.log({ error });
+    response({
+      code: 500,
+      data: null,
+      message: "Oops! Something went wrong!",
+    });
   }
 };
 
@@ -186,6 +189,10 @@ export const getUsersService = async (response: ResponseJSON) => {
     });
     return;
   } catch (error) {
-    console.log({ error });
+    response({
+      code: 500,
+      data: null,
+      message: "Oops! Something went wrong!",
+    });
   }
 };

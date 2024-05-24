@@ -25,11 +25,11 @@ model User {
 
 model UserProfile {
   id              Int       @id @default(autoincrement())
-  userId          Int       @unique
+  user_id         Int       @unique
   photo_url       String?
   birth_date      DateTime?
   whatsapp_number String?
   address         String?
   occupation      String?
-  user            User      @relation(fields: [userId], references: [id])
+  user            User      @relation(fields: [user_id], references: [id])
 }
