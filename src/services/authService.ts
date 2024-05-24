@@ -95,7 +95,7 @@ export const loginService = async (payload: User, response: ResponseJSON) => {
 
     if (!user.is_verified) {
       response({
-        code: 403,
+        code: 400,
         data: null,
         message: "Your account is not yet verified!",
       });
@@ -106,7 +106,7 @@ export const loginService = async (payload: User, response: ResponseJSON) => {
 
     if (!passwordMatch) {
       response({
-        code: 401,
+        code: 400,
         data: null,
         message: "Invalid password!",
       });
