@@ -7,13 +7,14 @@ import { PrismaClient, Prisma } from "@prisma/client";
 
 import { generateToken } from "../lib/authentication/jwt";
 import { sendConfirmationEmail } from "../lib/node-mailer/nodeMailer";
+import { createToken } from "../lib/helpers";
 
 const prisma = new PrismaClient();
 
 export const createUserService = async (payload: User, response: ResponseJSON) => {
   const { name, email, password } = payload;
 
-  const emailToken = CryptoJS.AES.encrypt(name || "", "HERE IS A SECRET KEY").toString();
+  const emailToken = createToken(15);
 
   if (!name || !email || !password) {
     response({
@@ -74,7 +75,7 @@ export const loginService = async (payload: User, response: ResponseJSON) => {
       data: null,
       message: "Email and Password are required!",
     });
-    return; 
+    return;
   }
 
   try {
@@ -118,7 +119,7 @@ export const loginService = async (payload: User, response: ResponseJSON) => {
 
     response({
       code: 200,
-      data: {...userData, token},
+      data: { ...userData, token },
       message: "Login successful!",
     });
   } catch (error) {

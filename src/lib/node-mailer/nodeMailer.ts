@@ -100,9 +100,7 @@ export const sendConfirmationEmail = async (user: User) => {
               </div>
               <h3>Please verify your email</h3>
               <div class="email-total">
-                  <p><b>Token : Rp.` +
-      email_token +
-      `</b></p>
+                  <p>Email Token : <b>${email_token}</b></p>
               </div>
               <div class="email-thanks">
                   <p>Regards,<br>
@@ -116,13 +114,13 @@ export const sendConfirmationEmail = async (user: User) => {
       </html>`,
   };
 
-  // Kirim email
+  // Send Email
   await transporter
     .sendMail(mailOptions)
-    .then((res) => {
-      console.log({ res });
-    })
-    .catch((err) => {
-      console.log({ err });
-    });
+    // .then((res) => {
+    //   console.log();
+    // })
+    // .catch((err) => {
+    //   console.log({ err });
+    // });
 };
