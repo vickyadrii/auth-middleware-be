@@ -23,7 +23,7 @@ Make sure you have installed the following prerequisites before proceeding:
 2. Navigate to the project directory:
 
    ```cd technical-test-be-indive```
-4. Install all the required dependencies using npm or Yarn:
+3. Install all the required dependencies using npm or Yarn:
    ````bash
    npm install
    # or
