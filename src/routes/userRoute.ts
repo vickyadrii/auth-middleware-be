@@ -1,9 +1,10 @@
 import { authMiddleware } from "../middleware/authMiddleware";
-import { updateUser } from "../controllers/userController";
+import { getDataUser, updateUser } from "../controllers/userController";
 import { Router } from "express";
 
 const router = Router();
 
-router.put("/update", authMiddleware, updateUser);
+router.put("/", authMiddleware, updateUser);
+router.get("/:id", getDataUser);
 
 export default router;

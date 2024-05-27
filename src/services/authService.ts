@@ -97,7 +97,7 @@ export const loginService = async (payload: User, response: ResponseJSON) => {
       response({
         code: 400,
         data: null,
-        message: "Your account is not yet verified!",
+        message: "Your account is not yet verified. Please verify your account.",
       });
       return;
     }
@@ -160,7 +160,7 @@ export const verifyEmailTokenService = async (payload: User, response: ResponseJ
       response({
         code: 200,
         data: { ...user, token },
-        message: "Login successful!",
+        message: "Verify Account successful!",
       });
       return;
     } else {

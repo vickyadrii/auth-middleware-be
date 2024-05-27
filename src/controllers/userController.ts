@@ -1,4 +1,4 @@
-import { updateUserService } from "../services/userService";
+import { getDataUserService, updateUserService } from "../services/userService";
 import { Request, Response } from "express";
 import uploadFile from "../configs/multerConfig";
 
@@ -37,6 +37,18 @@ export const updateUser = (req: Request, res: Response) => {
         data,
         message,
       });
+    });
+  });
+};
+
+export const getDataUser = (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  getDataUserService(parseInt(id), ({ code = 500, data, message }) => {
+    res.status(code).json({
+      code,
+      data,
+      message,
     });
   });
 };
