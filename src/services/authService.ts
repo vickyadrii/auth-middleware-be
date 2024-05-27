@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import CryptoJS from "crypto-js";
 
 import { User } from "@/types/auth";
 import { ResponseJSON } from "@/types/response";
