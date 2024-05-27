@@ -1,5 +1,7 @@
 # Technical Test Fullstack Indive Tech Solutions (Backend)
 
+This technical test for a freelance engineer
+
 ## Technologies used:
 [![My Skills](https://skillicons.dev/icons?i=express,ts,prisma,postgres)](https://skillicons.dev)
 
