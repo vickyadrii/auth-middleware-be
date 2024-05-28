@@ -58,3 +58,4 @@ Start the Express server:
 - [TypeScript](https://www.typescriptlang.org/) - Programming language
 - [Prisma](https://www.prisma.io/) - Modern ORM (Object-Relational Mapping) for Node.js and TypeScript
 - [PostgreSQL](https://www.postgresql.org/) - Open-source relational database management system
+- [Cloudinary](https://cloudinary.com/) - Cloud services for image, download, and CDN (Content Delivery Network)
