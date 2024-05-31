@@ -18,11 +18,11 @@ Make sure you have installed the following prerequisites before proceeding:
 
 1. Clone this repository to your local machine:
 
-   ```git clone https://github.com/vickyadrii/technical-test-be-indive.git```
+   ```git clone https://github.com/vickyadrii/auth-middleware-be.git```
 
 2. Navigate to the project directory:
 
-   ```cd technical-test-be-indive```
+   ```cd auth-middleware-be```
 3. Install all the required dependencies using npm or Yarn:
    ````bash
    npm install
