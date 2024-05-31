@@ -51,6 +51,9 @@ Start the Express server:
    yarn dev
    ````
 
+## Link Postman
+[Click here](https://www.postman.com/vickyadriii/workspace/public-workspace/collection/31750513-46a5047f-a80b-4686-8389-91431592f351?action=share&creator=31750513)
+
 ## Built With
 - [Express](https://expressjs.com/) - Web framework for Node.js
 - [TypeScript](https://www.typescriptlang.org/) - Programming language
